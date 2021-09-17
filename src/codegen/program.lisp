@@ -40,6 +40,14 @@
           :else :if (and (typep thing '(cons (member cl:defstruct)))
                          (not (sub-struct-p thing)))
                   :collect thing :into defstructs
+          ;; (DEFCLASS (FOO ... (:INCLUDE ...
+          :if (and (typep thing '(cons (member cl:defclass)))
+                   (not (null (third thing))))
+            :collect thing :into defsubstructs
+          ;; (DEFSTRUCT FOO ...
+          :else :if (and (typep thing '(cons (member cl:defclass)))
+                         (null (third thing)))
+                  :collect thing :into defstructs
           ;; (DECLAIM (INLINE ...
           :else :if (typep thing '(cons
                                    (member cl:declaim)

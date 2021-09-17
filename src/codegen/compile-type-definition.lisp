@@ -24,6 +24,58 @@
                ,(constructor-entry-name constructor)
                (coalton-impl/codegen::F1 #',(constructor-entry-name constructor))))))
 
+      ((eql :development *interaction-mode*)
+       `((defclass ,(type-definition-name def) ()
+           ())
+
+         ,@(loop
+             :for constructor :in (type-definition-constructors def)
+             :for classname := (constructor-entry-classname constructor)
+             :for slot-types := (mapcar #'coalton-impl/typechecker::fresh-inst (constructor-entry-arguments constructor))
+             :for slot-names := (ctor-make-slot-names (length slot-types) package)
+             :append
+             `((defclass ,classname (,(type-definition-name def))
+                 ,(ctor-make-class-slots slot-names slot-types env)))
+
+             :append
+             `((declaim (inline ,(constructor-entry-name constructor)))
+               (defun ,(constructor-entry-name constructor) ,slot-names
+                    (make-instance ',classname
+                                   ,@(mapcan (lambda (x) `(',x ,x))
+                                             slot-names))))
+
+             :collect (cond
+                        ((= 0 (constructor-entry-arity constructor))
+                         `(defmethod print-object ((self ,classname) stream)
+                            (declare (type stream stream)
+                                     (type ,classname self)
+                                     (values ,classname))
+                            (format stream "#.~s" ',(constructor-entry-name constructor))
+                            self))
+                        (t
+                         `(defmethod print-object ((self ,classname) stream)
+                            (declare (type stream stream)
+                                     (type ,classname self)
+                                     (values ,classname))
+                            (format stream "#.(~s~{ ~s~})"
+                                    ',(constructor-entry-name constructor)
+                                    (list ,@(mapcar (lambda (slot) `(slot-value self ',slot)) slot-names)))
+                            self)))
+
+             :append (cond
+                       ((= 0 (constructor-entry-arity constructor))
+                        `((coalton-impl::define-global-lexical
+                              ,(constructor-entry-name constructor)
+                              (,(constructor-entry-name constructor)))))
+                       (t
+                        (let* ((arity (length slot-names))
+                               (entry (construct-function-entry
+                                       `#',(constructor-entry-name constructor)
+                                       arity)))
+                          `((coalton-impl::define-global-lexical
+                                ,(constructor-entry-name constructor)
+                              ,entry))))))))
+
       (t
        `((defstruct (,(type-definition-name def)
                      (:constructor nil)
@@ -89,3 +141,13 @@
   (loop :for slot-name :in slot-names
         :for slot-type :in slot-types
         :collect (ctor-make-slot slot-name slot-type env)))
+
+(defun ctor-make-class-slot (name type env)
+  `(,name :initform (error "")
+          :initarg ,name
+          :type ,(lisp-type type env)))
+
+(defun ctor-make-class-slots (slot-names slot-types env)
+  (loop :for slot-name :in slot-names
+        :for slot-type :in slot-types
+        :collect (ctor-make-class-slot slot-name slot-type env)))
