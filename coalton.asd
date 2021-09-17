@@ -20,6 +20,7 @@
   :components ((:file "package")
                (:file "utilities")
                (:file "global-lexical")
+               (:file "settings")
                (:module "algorithm"
                 :serial t
                 :components ((:file "tarjan-scc")

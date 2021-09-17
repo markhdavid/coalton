@@ -22,7 +22,7 @@
   ;; application are not removed by the pointfree transform
   (let* ((node (direct-application-transform node optimizer))
          ;; Classes cannot be stack allocated
-         (node (if (eql *interaction-mode* :release)
+         (node (if (eql coalton-impl:*interaction-mode* ':release)
                    (pointfree-transform node optimizer)
                    node))
          (node (direct-application-transform node optimizer))
