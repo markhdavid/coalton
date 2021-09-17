@@ -1,5 +1,10 @@
 (in-package #:coalton-impl/codegen)
 
+(deftype interaction-mode ()
+  `(member :development :release))
+(declaim (type interaction-mode *interaction-mode*))
+(defvar *interaction-mode* :development)
+
 (defun compile-type-definition (def env)
   (let ((package (symbol-package (type-definition-name def))))
 

@@ -485,7 +485,7 @@
           elements))
        (graph-edges graph_))
       (vector-push "}" elements)
-      (msum (intersperse (show #\NEWLINE) (vector-to-list elements)))))
+      (msum (intersperse (show #\NEWLINE) (into (the (Vector String) elements))))))
 
 
   ;;
@@ -632,4 +632,4 @@
            (visit-node i))
          (graph-nodes graph))
 
-        (vector-to-list output-sccs)))))
+        (into (the (Vector (List NodeIndex)) output-sccs))))))

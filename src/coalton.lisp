@@ -18,6 +18,9 @@
                                            coalton:define-instance
                                            coalton:repr))
 
+(when (string= (uiop:getenv "COALTON_ENV") "release")
+  (setf coalton-impl/codegen:*interaction-mode* :release))
+
 ;;; Entry Point
 
 (defun collect-toplevel-forms (forms)

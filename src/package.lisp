@@ -313,7 +313,7 @@
    )
   (:export
    #:*emit-type-annotations*
-   #:*freeze-emitted-types*
+   #:*interaction-mode*
    ))
 
 (uiop:define-package #:coalton-impl/doc
