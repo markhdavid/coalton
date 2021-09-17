@@ -36,13 +36,13 @@
           :if (and (typep thing '(cons (member cl:defstruct)))
                    (sub-struct-p thing))
             :collect thing :into defsubstructs
-          ;; (DEFSTRUCT FOO ...
+          ;; (DEFSTRUCT FOO () ...
           :else :if (and (typep thing '(cons (member cl:defstruct)))
                          (not (sub-struct-p thing)))
                   :collect thing :into defstructs
-          ;; (DEFCLASS (FOO ... (:INCLUDE ...
-          :if (and (typep thing '(cons (member cl:defclass)))
-                   (not (null (third thing))))
+          ;; (DEFCLASS FOO (...) ...
+          :else :if (and (typep thing '(cons (member cl:defclass)))
+                         (not (null (third thing))))
             :collect thing :into defsubstructs
           ;; (DEFCLASS FOO ...
           :else :if (and (typep thing '(cons (member cl:defclass)))
@@ -97,7 +97,6 @@
 
        ;; Define typeclasses
        ,@(reshuffle-definitions (compile-class-definitions classes env))
-
 
        ;; Define ...
        ,@(reshuffle-definitions (append
