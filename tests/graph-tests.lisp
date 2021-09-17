@@ -60,7 +60,7 @@
      (coalton-library::NodeIndex 0)
      g)
 
-    (is (equalp (coalton-library::tarjan-scc g)
+    (is (coalton-library::tarjan-output-equal (coalton-library::tarjan-scc g)
                 (coalton-library::make-list
                  (coalton-library::make-list
                   (coalton-library::NodeIndex 0)
@@ -90,7 +90,7 @@
      (coalton-library::NodeIndex 1)
      g)
 
-    (is (equalp (coalton-library::tarjan-scc g)
+    (is (coalton-library::tarjan-output-equal (coalton-library::tarjan-scc g)
                 (coalton-library::make-list
                  (coalton-library::make-list
                   (coalton-library::NodeIndex 0))
@@ -147,7 +147,7 @@
        d
        g)
 
-      (is (equalp (coalton-library::tarjan-scc g)
+      (is (coalton-library::tarjan-output-equal (coalton-library::tarjan-scc g)
                   (coalton-library::make-list
                    (coalton-library::make-list
                     (coalton-library::NodeIndex 4)
@@ -192,7 +192,7 @@
     (coalton-library::graph-add-edge coalton-library::Unit h d graph_)
     (coalton-library::graph-add-edge coalton-library::Unit h g graph_)
 
-    (is (equalp (coalton-library::tarjan-scc graph_)
+    (is (coalton-library::tarjan-output-equal (coalton-library::tarjan-scc graph_)
                 (coalton-library::make-list
                  (coalton-library::make-list f g)
                  (coalton-library::make-list c d h)

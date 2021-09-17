@@ -632,4 +632,9 @@
            (visit-node i))
          (graph-nodes graph))
 
-        (into (the (Vector (List NodeIndex)) output-sccs))))))
+        (into (the (Vector (List NodeIndex)) output-sccs)))))
+
+  ;; Used in tests
+  (declare tarjan-output-equal ((List (List NodeIndex)) -> (List (List (NodeIndex))) -> Boolean))
+  (define (tarjan-output-equal a b)
+    (== a b)))
