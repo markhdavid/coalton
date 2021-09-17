@@ -44,7 +44,7 @@
           :if (and (typep thing '(cons (member cl:defclass)))
                    (not (null (third thing))))
             :collect thing :into defsubstructs
-          ;; (DEFSTRUCT FOO ...
+          ;; (DEFCLASS FOO ...
           :else :if (and (typep thing '(cons (member cl:defclass)))
                          (null (third thing)))
                   :collect thing :into defstructs
